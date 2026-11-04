@@ -26,7 +26,7 @@
                 <a class="site-title" href="<?php echo esc_url(home_url('/')); ?>">
                     <?php echo esc_html(get_theme_mod('ol_college_name', get_bloginfo('name'))); ?>
                 </a>
-                <?php if (get_bloginfo('description')): ?><span class="site-tagline"><?php bloginfo('description'); ?></span><?php endif; ?>
+                <?php if ($school_tagline = get_theme_mod('ol_school_tagline', get_bloginfo('description'))): ?><span class="site-tagline"><?php echo esc_html($school_tagline); ?></span><?php endif; ?>
             </div>
         </div>
         <button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><span></span><span></span><span></span><b class="screen-reader-text">Menu</b></button>

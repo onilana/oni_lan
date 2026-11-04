@@ -39,6 +39,10 @@ html {
 }
 
 body {
+	 display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -54,11 +58,12 @@ body {
     background: #fff;
     line-height: 1.7;
 }
-
+main#primary {
+    flex: 1;
+}
 a {
     color: inherit;
-    text-decoration: none;
-}
+    text-decoration: none;}
 
 img,
 iframe,
@@ -333,12 +338,31 @@ select {
 /* ==========================================================================
    06. HEADER & NAVIGATION
    ========================================================================== */
+/* 1. This is critical: position: sticky won't work if parents have overflow hidden */
+html, body {
+    overflow: visible !important;
+}
+
+/* 2. Style the sticky header */
+header.site-header {
+    position: sticky !important;
+    top: 0;
+    z-index: 9999;
+    background-color: #ffffff; /* Or your preferred theme color */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional: adds a nice separation */
+}
+
+/* 3. Handle the WordPress Admin Bar offset */
+.admin-bar header.site-header {
+    top: 32px;
+}
+
 .site-header {
 	position: -webkit-sticky; /* For Safari compatibility */
     position: sticky;
 	Top: 0;
     z-index: 9999;
-	transition: transform 0.3s ease-in-out;}
+	transition: transform 0.3s ease-in-out;
     background: #fff;
     border-bottom: 1px solid var(--border);}
 /* Added via JS logic */
@@ -673,6 +697,7 @@ header.site-header.is-hidden {
     grid-template-columns: minmax(0, 3fr) minmax(320px, 1fr);
     width: 100%;
     min-width: 0;
+    padding-inline: 10px;
 }
 
 .hero-notice-slider {
@@ -687,7 +712,7 @@ header.site-header.is-hidden {
 .hero-notice-slider .slide { height: 560px; min-height: 560px; }
 
 .notice-board {
-    position: relative; z-index: 2; min-width: 0; padding: 28px 24px; overflow: hidden; margin: 0 5px; background: var(--bg); border-left-style: inset; box-shadow: 0 2px 5px rgb(11 26 41 / 54%); }
+    position: relative; z-index: 2; min-width: 0; padding: 28px 24px; overflow: hidden; margin: 0 15px; background: var(--bg); border-left-style: inset; box-shadow: 0 2px 5px rgb(11 26 41 / 54%); }
 
 .notice-head {
     padding-bottom: 14px;
@@ -775,16 +800,21 @@ header.site-header.is-hidden {
 }
 
 .about-card {
-    padding: 55px;
-    color: #fff;
-    background: var(--primary);
+    aspect-ratio: 4 / 3;
+    background: #e9edf2;
+    border: 2px dashed #b8c3cf;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
 }
 
-.about-card-icon {
-    color: var(--secondary);
-    font-size: 2rem;
+.about-card.has-image {
+    overflow: hidden;
+    border: 0;
+}
+
+.about-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 
@@ -1291,6 +1321,12 @@ header.site-header.is-hidden {
 
 .content-area {
     min-width: 0;
+}
+
+.content-layout {
+    min-width: 0;
+    padding-top: 32px;
+    padding-bottom: 32px;
 }
 
 .content-with-sidebar > .sidebar {
@@ -1972,6 +2008,7 @@ body.preloader-active {
 .error-404-page,
 .archive-page,
 .content-with-sidebar,
+.content-layout,
 .gallery-page,
 .single-page
 .contact-page {
@@ -2020,9 +2057,10 @@ body.preloader-active {
     .primary-nav .sub-menu .sub-menu { position: static; margin-left: 0; padding-left: 16px; }
 /* Hero + notice */
     .hero-notice-grid { grid-template-columns: 1fr; }
+    .hero-notice-grid { padding-inline: 0; }
     .hero-notice-slider .slide {height: 350px; min-height: 320px;  }
-    .notice-board {border-top: 1px solid var(--border); border-left: 0; margin: 0;  }
-    .notice-list { max-height: 340px; }
+    .notice-board {border-top: 1px solid var(--border); border-left: 0; margin: 0 10px;  }
+    .notice-list { max-height: none; overflow-y: visible; overscroll-behavior: auto; }
 /* Homepage */
     .about-grid,.contact-layout {grid-template-columns: 1fr; gap: 32px; }
     .stats-grid {grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2031,6 +2069,7 @@ body.preloader-active {
     .events-grid {grid-template-columns: 1fr;}
 /* Content + sidebar */
     .content-with-sidebar {grid-template-columns: 1fr; gap: 32px; padding-top: 56px; padding-bottom: 56px; }
+    .content-layout {padding-top: 56px; padding-bottom: 56px;}
     .content-with-sidebar > .sidebar {grid-column: 1; grid-row: 2;}
     .home-main-sections.has-home-sidebar {display: grid; grid-template-columns: minmax(0, 1fr) 300px;  gap: 32px; align-items: start; }
     .home-main-sections.has-home-sidebar > .home-body-content {grid-column: 1; grid-row: 1; min-width: 0; }
@@ -2086,8 +2125,9 @@ body.preloader-active {
     .footer-grid { grid-template-columns: 1fr; }
     .stats-grid {grid-template-columns: repeat(2, minmax(0, 1fr))}
 /* Statistics */
-    .stat-item { border-right: 0 !important; border-bottom: 1px solid rgba(255, 255, 255, .16); }
-    .stat-item:last-child {border-bottom: 0;}
+    .stat-item { border-right: 0 !important; border-bottom: 0; }
+    .stat-item:nth-child(odd) { border-right: 1px solid rgba(255, 255, 255, .16) !important; }
+    .stat-item:nth-child(-n + 2) { border-bottom: 1px solid rgba(255, 255, 255, .16); }
 /* Events */
     .event-card { align-items: flex-start;}
     .event-date {flex-basis: 64px; width: 64px; height: 64px; }
@@ -2134,7 +2174,7 @@ body.preloader-active {
     .site-search-form { flex-direction: column; }
     .site-search-form .button { width: 100%; }
 /* Page gutters */
-    .search-page, .error-404-page, .archive-page, .content-with-sidebar, .gallery-page, .contact-page { padding-left: 20px; padding-right: 20px; }
+    .search-page, .error-404-page, .archive-page, .content-with-sidebar, .content-layout, .gallery-page, .contact-page { padding-left: 20px; padding-right: 20px; }
 /* 404 */
     .error-404-page { padding-top: 55px; padding-bottom: 65px;  }
     .error-404-card { padding: 38px 22px; border-radius: 18px;}
@@ -2142,6 +2182,12 @@ body.preloader-active {
     .error-404-actions .button { width: 100%;   }
 /* Social icons */
     .social-icon { width: 40px; height: 40px; }
+	
+	.stat-item strong {
+    display: block;
+    font-size: 1.7rem;
+    line-height: 1.1;
+}
 }
 /* ==========================================================================
    29. SMALL MOBILE — <= 600px

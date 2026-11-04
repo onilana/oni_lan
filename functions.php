@@ -5,7 +5,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ONI_LANA_VERSION', '1.8.1' );
+define( 'ONI_LANA_VERSION', '1.8.12' );
 define( 'ONI_LANA_DIR', get_template_directory() );
 define( 'ONI_LANA_URI', get_template_directory_uri() );
 
@@ -30,9 +30,19 @@ function oni_lana_setup() {
 add_action( 'after_setup_theme', 'oni_lana_setup' );
 
 require_once ONI_LANA_DIR . '/inc/contact-validator.php';
+require_once ONI_LANA_DIR . '/inc/admissions.php';
+require_once ONI_LANA_DIR . '/inc/pwa.php';
 
 function oni_lana_assets() {
     wp_enqueue_style( 'oni-lana-main', ONI_LANA_URI . '/assets/css/main.css', array(), ONI_LANA_VERSION );
+    $primary_color   = sanitize_hex_color( get_theme_mod( 'ol_primary_color', '#173f73' ) );
+    $secondary_color = sanitize_hex_color( get_theme_mod( 'ol_secondary_color', '#d6a84f' ) );
+    $primary_color   = $primary_color ? $primary_color : '#173f73';
+    $secondary_color = $secondary_color ? $secondary_color : '#d6a84f';
+    wp_add_inline_style(
+        'oni-lana-main',
+        ':root{--primary:' . esc_attr( $primary_color ) . ';--secondary:' . esc_attr( $secondary_color ) . ';}'
+    );
     wp_enqueue_script( 'oni-lana-main', ONI_LANA_URI . '/assets/js/main.js', array(), ONI_LANA_VERSION, true );
     wp_enqueue_style( 'oni-lana-header-search', ONI_LANA_URI . '/assets/css/header-search.css', array( 'oni-lana-main' ), ONI_LANA_VERSION );
     wp_enqueue_script( 'oni-lana-header-search', ONI_LANA_URI . '/assets/js/header-search.js', array(), ONI_LANA_VERSION, true );
@@ -46,6 +56,11 @@ function oni_lana_assets() {
     // Dedicated contact stylesheet is loaded only on the Contact template.
     if ( is_page_template( 'page-contact.php' ) ) {
         wp_enqueue_style( 'oni-lana-contact', ONI_LANA_URI . '/assets/css/contact.css', array( 'oni-lana-main' ), ONI_LANA_VERSION );
+    }
+
+    if ( is_page_template( 'page-admission.php' ) ) {
+        wp_enqueue_style( 'oni-lana-admission', ONI_LANA_URI . '/assets/css/admission.css', array( 'oni-lana-main' ), ONI_LANA_VERSION );
+        wp_enqueue_script( 'oni-lana-admission', ONI_LANA_URI . '/assets/js/admission.js', array(), ONI_LANA_VERSION, true );
     }
 
     wp_localize_script( 'oni-lana-main', 'oniLanaTheme', array(
@@ -426,11 +441,15 @@ function oni_lana_social_icon( $network ) {
 
 /* Customizer. */
 function oni_lana_customize( $wp_customize ) {
-    $wp_customize->add_panel('oni_lana_home',array('title'=>__('Oni Lana Theme Settings','oni-lana'),'priority'=>20));
+    $wp_customize->add_panel('oni_lana_home',array('title'=>__('School Website Settings','oni-lana'),'priority'=>20));
     $sections=array(
+        'oni_lana_branding'=>array('School Branding',array(
+            'ol_college_name'=>array('School Name','text',get_bloginfo('name')),
+            'ol_school_tagline'=>array('School Tagline','text',get_bloginfo('description')),
+            'ol_primary_color'=>array('Primary Brand Color','color','#173f73'),
+            'ol_secondary_color'=>array('Accent Brand Color','color','#d6a84f'),
+        )),
         'oni_lana_general'=>array('General',array(
-            'ol_college_name'=>array('College Name','text',get_bloginfo('name')),
-            'ol_sidebar_enabled'=>array('Enable Sidebar','checkbox',false),
             'ol_home_sidebar_enabled'=>array('Home Page Sidebar','checkbox',false),
             'ol_blog_sidebar_enabled'=>array('Blog/Archive Sidebar','checkbox',false),
             'ol_preloader'=>array('Enable Preloader','checkbox',true),
@@ -452,13 +471,19 @@ function oni_lana_customize( $wp_customize ) {
     foreach($sections as $sid=>$data){
         $wp_customize->add_section($sid,array('title'=>$data[0],'panel'=>'oni_lana_home'));
         foreach($data[1] as $key=>$v){
-            $sanitize=$v[1]==='url'?'esc_url_raw':($v[1]==='map_embed'?'oni_lana_sanitize_map_embed':($v[1]==='textarea'?'wp_kses_post':($v[1]==='checkbox'?'rest_sanitize_boolean':'sanitize_text_field')));
+            $sanitize=$v[1]==='url'?'esc_url_raw':($v[1]==='color'?'sanitize_hex_color':($v[1]==='map_embed'?'oni_lana_sanitize_map_embed':($v[1]==='textarea'?'wp_kses_post':($v[1]==='checkbox'?'rest_sanitize_boolean':'sanitize_text_field'))));
             $wp_customize->add_setting($key,array('default'=>$v[2],'sanitize_callback'=>$sanitize));
             $control=array('label'=>$v[0],'section'=>$sid,'type'=>($v[1]==='map_embed'?'textarea':$v[1]));
             if($key==='ol_preloader_style') $control['choices']=array('spinner'=>'Spinner','dots'=>'Dots','bar'=>'Progress Bar');
-            $wp_customize->add_control($key,$control);
+            if($v[1]==='color'){
+                $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize,$key,$control));
+            }else{
+                $wp_customize->add_control($key,$control);
+            }
         }
     }
+    $wp_customize->add_setting('ol_about_image',array('default'=>0,'sanitize_callback'=>'absint'));
+    $wp_customize->add_control(new WP_Customize_Media_Control($wp_customize,'ol_about_image',array('label'=>'About Section Image','description'=>'Choose the image displayed beside the About section text.','section'=>'oni_lana_about','mime_type'=>'image')));
     $wp_customize->add_section('oni_lana_popup',array('title'=>'Homepage Popup','panel'=>'oni_lana_home'));
     $popup=array('ol_popup_enabled'=>array('Enable Popup','checkbox',false),'ol_popup_title'=>array('Popup Title','text','Admission 2026–2027'),'ol_popup_content'=>array('Popup Content','textarea','Applications are now open. Add your announcement, programme links and call to action here.'),'ol_popup_button'=>array('Button Text','text','Apply Now'),'ol_popup_url'=>array('Button URL','url',''));
     foreach($popup as $key=>$v){$sanitize=$v[1]==='url'?'esc_url_raw':($v[1]==='map_embed'?'oni_lana_sanitize_map_embed':($v[1]==='textarea'?'wp_kses_post':($v[1]==='checkbox'?'rest_sanitize_boolean':'sanitize_text_field')));$wp_customize->add_setting($key,array('default'=>$v[2],'sanitize_callback'=>$sanitize));$wp_customize->add_control($key,array('label'=>$v[0],'section'=>'oni_lana_popup','type'=>$v[1]));}
@@ -607,12 +632,31 @@ add_action('after_setup_theme', 'oni_lana_content_width', 0);
 
 /* Login page styling. */
 function oni_lana_login_assets() {
-    wp_enqueue_style('oni-lana-login', ONI_LANA_URI.'/assets/css/login.css', array(), ONI_LANA_VERSION);
+    wp_enqueue_style( 'oni-lana-login', ONI_LANA_URI . '/assets/css/login.css', array(), ONI_LANA_VERSION );
+
+    $logo_id  = absint( get_theme_mod( 'custom_logo', 0 ) );
+    $logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+    $logo_css = $logo_url
+        ? '#login h1 a{background-image:url("' . esc_url( $logo_url ) . '")!important;}'
+        : '';
+
+    if ( $logo_css ) {
+        wp_add_inline_style( 'oni-lana-login', $logo_css );
+    }
 }
 add_action('login_enqueue_scripts', 'oni_lana_login_assets');
+function oni_lana_login_message( $message ) {
+    $design = '<div class="oni-login-design-message">'
+        . '<div class="oni-login-heading"><span class="oni-login-welcome">' . esc_html__( 'Welcome back', 'oni-lana' ) . '</span><h2>' . esc_html__( 'Login your account', 'oni-lana' ) . '</h2></div>'
+        . '<div class="oni-login-art-copy" aria-hidden="true"><strong>' . esc_html( get_bloginfo( 'name' ) ) . '</strong><span>' . esc_html__( 'Sign in to continue manage your website.', 'oni-lana' ) . '</span></div>'
+        . '</div>';
+
+    return $design . $message;
+}
+add_filter( 'login_message', 'oni_lana_login_message' );
 function oni_lana_login_logo_url() { return home_url('/'); }
 add_filter('login_headerurl', 'oni_lana_login_logo_url');
-function oni_lana_login_logo_title() { return get_bloginfo('name'); }
+function oni_lana_login_logo_title() { return get_theme_mod('ol_college_name', get_bloginfo('name')); }
 add_filter('login_headertext', 'oni_lana_login_logo_title');
 
 function custom_excerpt_length( $length ) {

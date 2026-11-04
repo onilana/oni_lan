@@ -1,0 +1,110 @@
+Attached Element Context from Integrated Browser
+
+Element: aside.notice-board
+
+URL: http://lana.local/
+
+HTML Path: main#primary.site-main > section.hero-notice-section > div.hero-notice-grid > aside.notice-board
+
+Outer HTML:
+```html
+<aside class="notice-board" aria-label="Notice Board">
+            <div class="notice-head">
+                <span class="eyebrow">Updates</span>
+                <h2>Notice Board</h2>
+                <p>Latest college notices and important updates.</p>
+            </div>
+            <div class="notice-list">
+                                        <article class="notice-row">
+                            <time datetime="2026-09-10">10 Sep</time>
+                            <div>
+                                <h3>
+                                    Notice 7                                </h3>
+                                                            </div>
+                        </article>
+                                            <article class="notice-row">
+                            <time datetime="2026-09-11">11 Sep</time>
+                            <div>
+                                <h3>
+                                    Notice 3                                </h3>
+                                                            </div>
+                        </article>
+                                            <article class="notice-row">
+                            <time datetime="2026-09-08">08 Sep</time>
+                            <div>
+                                <h3>
+                                    Test 2                                </h3>
+                                                            </div>
+                        </article>
+                                            <article class="notice-row">
+                            <time datetime="2026-09-09">09 Sep</time>
+                            <div>
+                                <h3>
+                                    Test Post                                </h3>
+                                                            </div>
+                        </article>
+                                            <article class="notice-row">
+                            <time datetime="2026-09-10">10 Sep</time>
+                            <div>
+                                <h3>
+                                    Sports Week Contribution                                </h3>
+                                                            </div>
+                        </article>
+                                            <article class="notice-row">
+                            <time datetime="2026-09-03">03 Sep</time>
+                            <div>
+                                <h3>
+                                    <a href="https://lana.free.je/wp-admin/post.php?post=59">Exam Form Fill Up</a>                                </h3>
+                                <p>Form fill up for Second Semester, 2026 June</p>                            </div>
+                        </article>
+                                </div>
+        </aside>
+```
+
+Dimensions:
+- top: 226px
+- left: 15px
+- width: 455px
+- height: 498px
+
+CSS:
+```css
+*, *::before, *::after { box-sizing: border-box; }
+.notice-board { position: relative; z-index: 2; min-width: 0; padding: 28px 24px; overflow: hidden; margin: 0 5px; background: var(--bg); border-left-style: inset; box-shadow: 0 2px 5px rgb(11 26 41 / 54%); }
+.notice-board { border-top: 1px solid var(--border); border-left: 0; margin: 0; }
+
+/* Inherited */
+body { font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif; color: var(--dark); line-height: 1.7 }
+
+/* Resolved values */
+margin: 0px;
+padding: 28px 24px;
+border-left-color: rgb(16, 32, 51);
+border-left-style: none;
+border-left-width: 0px;
+box-shadow: rgba(11, 26, 41, 0.54) 0px 2px 5px 0px;
+box-sizing: border-box;
+color: rgb(16, 32, 51);
+display: block;
+font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+height: 497.975px;
+line-height: 27.2px;
+min-width: 0px;
+overflow-x: hidden;
+overflow-y: hidden;
+position: relative;
+unicode-bidi: isolate /*UA*/;
+width: 455.2px;
+z-index: 2;
+
+/* CSS variables */
+--border: #e6eaf0;
+--bg: #f7f9fc;
+--dark: #102033;
+```

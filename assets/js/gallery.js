@@ -5,34 +5,53 @@
 
     document.querySelectorAll('[data-gallery-carousel]').forEach(function (carousel) {
         var track = carousel.querySelector('.home-gallery-track');
+        var viewport = carousel.querySelector('.home-gallery-viewport');
         var slides = Array.prototype.slice.call(carousel.querySelectorAll('.home-gallery-slide'));
-        var dots = Array.prototype.slice.call(carousel.querySelectorAll('[data-carousel-dot]'));
-        var previous = carousel.querySelector('[data-carousel-prev]');
-        var next = carousel.querySelector('[data-carousel-next]');
+        var controls = carousel.querySelector('[data-carousel-controls]');
         var current = 0;
         var timer = null;
         var touchStart = null;
 
-        if (!track || slides.length < 2) {
+        if (!track || !viewport || !controls || slides.length < 2) {
             return;
         }
 
+        function maxIndex() {
+            var maxOffset = track.scrollWidth - viewport.clientWidth;
+            var step = slides[1].offsetLeft - slides[0].offsetLeft;
+            return step > 0 ? Math.max(0, Math.floor((maxOffset + 1) / step)) : 0;
+        }
+
         function show(index) {
-            current = (index + slides.length) % slides.length;
-            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+            var lastIndex = maxIndex();
+            current = (index + lastIndex + 1) % (lastIndex + 1);
+            var offset = slides[current].offsetLeft - slides[0].offsetLeft;
+            track.style.transform = 'translateX(-' + offset + 'px)';
+            Array.prototype.forEach.call(controls.children, function (control, controlIndex) {
+                control.setAttribute('aria-current', controlIndex === current ? 'true' : 'false');
+            });
 
             slides.forEach(function (slide, slideIndex) {
-                slide.setAttribute('aria-hidden', slideIndex === current ? 'false' : 'true');
-                slide.setAttribute('tabindex', slideIndex === current ? '0' : '-1');
+                var slideStart = slide.offsetLeft - slides[0].offsetLeft;
+                var slideEnd = slideStart + slide.offsetWidth;
+                var visible = slideEnd > offset && slideStart < offset + viewport.clientWidth;
+                slide.setAttribute('aria-hidden', visible ? 'false' : 'true');
             });
+        }
 
-            dots.forEach(function (dot, dotIndex) {
-                if (dotIndex === current) {
-                    dot.setAttribute('aria-current', 'true');
-                } else {
-                    dot.removeAttribute('aria-current');
-                }
-            });
+        function createControls() {
+            controls.textContent = '';
+            for (var index = 0; index <= maxIndex(); index += 1) {
+                var button = document.createElement('button');
+                button.className = 'gallery-carousel-dot';
+                button.type = 'button';
+                button.setAttribute('aria-label', controls.getAttribute('data-label').replace('%d', index + 1));
+                button.addEventListener('click', function (event) {
+                    show(Array.prototype.indexOf.call(controls.children, event.currentTarget));
+                    play();
+                });
+                controls.appendChild(button);
+            }
         }
 
         function stop() {
@@ -50,23 +69,6 @@
                 }, 5000);
             }
         }
-
-        previous.addEventListener('click', function () {
-            show(current - 1);
-            play();
-        });
-
-        next.addEventListener('click', function () {
-            show(current + 1);
-            play();
-        });
-
-        dots.forEach(function (dot) {
-            dot.addEventListener('click', function () {
-                show(Number(dot.getAttribute('data-carousel-dot')) || 0);
-                play();
-            });
-        });
 
         carousel.addEventListener('mouseenter', stop);
         carousel.addEventListener('mouseleave', play);
@@ -91,7 +93,12 @@
             play();
         }, { passive: true });
         document.addEventListener('visibilitychange', play);
+        window.addEventListener('resize', function () {
+            createControls();
+            show(current);
+        });
 
+        createControls();
         show(0);
         play();
     });

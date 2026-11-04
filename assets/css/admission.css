@@ -1,0 +1,169 @@
+.admission-page .entry-content {
+    margin-bottom: 12px;
+}
+
+.admission-notice {
+    padding: 10px 14px;
+    margin: 0 0 14px;
+    border: 1px solid #e8d8a8;
+    border-radius: 8px;
+    background: #fff9e9;
+    color: #59451a;
+}
+
+.admission-notice-success {
+    border-color: #b7dfc2;
+    background: #eaf7ed;
+    color: #175b32;
+}
+
+.admission-notice-error {
+    border-color: #e4b7b7;
+    background: #fff0f0;
+    color: #8b2020;
+}
+
+.admission-countdown-notice strong {
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.admission-honeypot {
+    position: absolute !important;
+    left: -10000px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+}
+
+.admission-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.admission-section {
+    min-width: 0;
+    padding: 14px;
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.admission-section:first-of-type {
+    grid-column: 1 / -1;
+}
+
+.admission-section:first-of-type .admission-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admission-section legend {
+    padding: 0 10px;
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.required-note {
+    display: inline-block;
+    margin-left: 6px;
+    color: #8b2020;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.admission-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 12px;
+}
+
+.admission-field {
+    display: block;
+    min-width: 0;
+    font-weight: 700;
+}
+
+.admission-field-full {
+    grid-column: 1 / -1;
+}
+
+.field-help {
+    color: var(--muted);
+    font-size: .88rem;
+    font-weight: 400;
+}
+
+.admission-field input,
+.admission-field select,
+.admission-field textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 6px 9px;
+    margin-top: 3px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--dark);
+    font: inherit;
+}
+
+.admission-field input[type="file"] {
+    padding: 5px;
+    font-size: .82rem;
+}
+
+.admission-field textarea {
+    resize: vertical;
+}
+
+.admission-field input:focus,
+.admission-field select:focus,
+.admission-field textarea:focus {
+    outline: 2px solid rgba(23, 63, 115, .18);
+    border-color: var(--primary);
+}
+
+.admission-field input[readonly],
+.admission-field select:disabled {
+    background: var(--bg);
+}
+
+.admission-submit {
+    justify-self: start;
+    grid-column: 1 / -1;
+}
+
+.admission-download-form {
+    margin: 0 0 18px;
+}
+
+@media (max-width: 600px) {
+    .admission-form {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-section:first-of-type {
+        grid-column: auto;
+    }
+
+    .admission-section {
+        padding: 12px;
+    }
+
+    .admission-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-section:first-of-type .admission-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-field-full {
+        grid-column: auto;
+    }
+}

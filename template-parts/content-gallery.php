@@ -7,7 +7,7 @@ $latest_photos = get_posts( array(
     'post_type'      => 'attachment',
     'post_status'    => 'inherit',
     'post_mime_type' => 'image',
-    'posts_per_page' => 6,
+    'posts_per_page' => 10,
     'orderby'        => 'date',
     'order'          => 'DESC',
     'no_found_rows'  => true,
@@ -31,30 +31,21 @@ $gallery_url = oni_lana_get_gallery_page_url();
                 <div class="home-gallery-track">
                     <?php foreach ($latest_photos as $index => $photo):
                         $photo_id = $photo->ID;
-                        $full_url = wp_get_attachment_image_url($photo_id, 'full');
-                        if (!$full_url) continue;
-                        $caption = wp_get_attachment_caption($photo_id) ?: get_the_title($photo_id);
                         $alt = get_post_meta($photo_id, '_wp_attachment_image_alt', true) ?: get_the_title($photo_id);
                         ?>
-                        <a class="home-gallery-slide" href="<?php echo esc_url($full_url); ?>" data-gallery-item data-gallery-group="latest-photos" data-caption="<?php echo esc_attr($caption); ?>" data-alt="<?php echo esc_attr($alt); ?>" aria-label="<?php echo esc_attr(sprintf(__('View photo %1$d of %2$d', 'oni-lana'), $index + 1, count($latest_photos))); ?>">
+                        <div class="home-gallery-slide">
                             <?php echo wp_get_attachment_image($photo_id, 'large', false, array(
                                 'loading'       => 0 === $index ? 'eager' : 'lazy',
                                 'fetchpriority' => 0 === $index ? 'high' : 'auto',
                                 'alt'           => $alt,
                             )); ?>
-                            <?php if ($caption): ?><span class="home-gallery-caption"><?php echo esc_html($caption); ?></span><?php endif; ?>
-                        </a>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
             <?php if (count($latest_photos) > 1): ?>
-                <button class="gallery-carousel-control gallery-carousel-prev" type="button" data-carousel-prev aria-label="<?php esc_attr_e('Previous photo', 'oni-lana'); ?>"><span aria-hidden="true">‹</span></button>
-                <button class="gallery-carousel-control gallery-carousel-next" type="button" data-carousel-next aria-label="<?php esc_attr_e('Next photo', 'oni-lana'); ?>"><span aria-hidden="true">›</span></button>
-                <div class="gallery-carousel-dots" aria-label="<?php esc_attr_e('Choose a photo', 'oni-lana'); ?>">
-                    <?php foreach ($latest_photos as $index => $photo): ?>
-                        <button type="button" data-carousel-dot="<?php echo esc_attr($index); ?>" aria-label="<?php echo esc_attr(sprintf(__('Show photo %d', 'oni-lana'), $index + 1)); ?>"<?php echo 0 === $index ? ' aria-current="true"' : ''; ?>></button>
-                    <?php endforeach; ?>
+                <div class="gallery-carousel-controls" data-carousel-controls data-label="<?php esc_attr_e('Show photo group %d', 'oni-lana'); ?>" role="group" aria-label="<?php esc_attr_e('Choose a group of photos', 'oni-lana'); ?>">
                 </div>
             <?php endif; ?>
         </div>

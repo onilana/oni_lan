@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<div class="container content-with-sidebar">
+<div class="container content-layout">
     <article class="content-area single-post">
         <?php while (have_posts()): the_post(); ?>
             <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="<?php echo esc_url(home_url('/')); ?>">Home</a><span aria-hidden="true">›</span><a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/')); ?>">Blog</a><span aria-hidden="true">›</span><span><?php echo esc_html(get_the_title()); ?></span></nav>
@@ -20,6 +20,5 @@
             </div><?php endif; ?>
         <?php endwhile; ?>
     </article>
-    <?php if (get_theme_mod('ol_sidebar_enabled', false)): ?><aside class="sidebar"><?php get_sidebar(); ?></aside><?php endif; ?>
 </div>
 <?php get_footer(); ?>

@@ -5,7 +5,7 @@
         <section class="footer-widget footer-about">
             <?php if (has_custom_logo()) { the_custom_logo(); } ?>
             <h3 class="widget-title"><?php echo esc_html(get_theme_mod('ol_college_name', get_bloginfo('name'))); ?></h3>
-            <?php if ($tagline = get_bloginfo('description')): ?>
+            <?php if ($tagline = get_theme_mod('ol_school_tagline', get_bloginfo('description'))): ?>
             <p><?php echo esc_html($tagline); ?></p>
             <?php endif; ?>
              <?php if ($address = get_theme_mod('ol_address')): ?><p><?php echo nl2br(esc_html($address)); ?></p><?php endif; ?>

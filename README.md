@@ -15,10 +15,11 @@ A responsive college/institutional WordPress theme with a modern homepage, admin
 - Social share buttons on blog posts: Facebook, X/Twitter, WhatsApp, LinkedIn and Copy Link; controlled from Customizer.
 - Gallery Items custom post type and per-post gallery image selector.
 - Bundled starter image assets in `assets/images/`.
-- Optional sidebar, widgets and footer widget areas.
+- Optional sidebar on blog/archive listings, plus widgets and footer widget areas.
 - Configurable preloader: Spinner / Dots / Progress Bar.
 - Contact page with Google Maps embed and configurable recipient email using WordPress `wp_mail()`.
 - Modern WordPress login styling.
+- Installable Android Progressive Web App (PWA) with a school-branded app name and offline message.
 - PDF, YouTube and self-hosted video shortcodes.
 
 ## Installation
@@ -27,8 +28,28 @@ A responsive college/institutional WordPress theme with a modern homepage, admin
 2. Activate **Oni Lana**.
 3. Assign a menu to **Primary Menu** under Appearance → Menus.
 4. Add content using the dashboard menus: Slides, Notice Board, Programmes, Stats, Events and Gallery Items.
-5. Configure **Appearance → Customize → Oni Lana Theme Settings**.
+5. Configure **Appearance → Customize → School Website Settings** using the School Branding, General, Top Bar, Announcement Bar, About Section, Contact & Footer, Homepage Popup, Blog Social Sharing and Notice Board sections.
 6. Add widgets under Appearance → Widgets.
+
+## School branding
+
+Each school site can set its own branding under **Appearance → Customize → School Website Settings → School Branding**:
+
+- School name and tagline
+- Primary and accent brand colors
+- School logo through **Appearance → Customize → Site Identity → Logo**
+
+The fixed designer credit is kept in the theme footer and is not configurable in School Branding.
+
+Set the WordPress Site Title under **Settings → General** as well; WordPress uses it for browser titles and other site metadata.
+
+The About section image can be selected under **Appearance → Customize → School Website Settings → About Section → About Section Image**. If no image is selected, the placeholder remains visible.
+
+The WordPress admin login can be customized under **Appearance → Customize → School Website Settings → Admin Login Page**. Choose an optional login logo and background image, then set the overlay color and transparency (0% is opaque; 100% is transparent). Leave either image unset to use the theme's text branding or gradient background.
+
+## Android app (PWA)
+
+The website can be installed from a supported Android browser and launched in a standalone app window. Use HTTPS on the live site, then set the school app icon under **Appearance → Customize → Site Identity → Site Icon** (a square image of at least 512 × 512 pixels is recommended). The app name comes from the configured School Name. When offline, it displays a simple reconnect message; it does not cache website pages, forms, or application data. On Android, open the live website in Chrome and choose **Install app** or **Add to Home screen** from the browser menu.
 
 ## Homepage slider
 
@@ -44,7 +65,7 @@ The search icon in the top bar expands a search field in place. Clicking the ico
 
 ## Homepage popup
 
-Go to **Customizer → Oni Lana Theme Settings → Homepage Popup** and switch **Enable Popup** on/off. You can edit:
+Go to **Customizer → School Website Settings → Homepage Popup** and switch **Enable Popup** on/off. You can edit:
 - Popup title
 - Popup content
 - Popup image

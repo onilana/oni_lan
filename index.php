@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<div class="container content-with-sidebar">
+<div class="container content-layout">
     <section class="content-area">
         <?php if (have_posts()): while (have_posts()): the_post(); ?>
             <article <?php post_class('post-card'); ?>>
@@ -12,6 +12,5 @@
             </article>
         <?php endwhile; the_posts_pagination(); else: ?><p>No content found.</p><?php endif; ?>
     </section>
-    <?php if (get_theme_mod('ol_sidebar_enabled', false)): ?><aside class="sidebar"><?php get_sidebar(); ?></aside><?php endif; ?>
 </div>
 <?php get_footer(); ?>
