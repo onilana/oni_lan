@@ -78,7 +78,7 @@ get_header();
                     <input type="text" name="father_occupation" maxlength="120" required>
                 </label>
                 <label class="admission-field">Father's Mobile Number
-                    <input type="tel" name="father_mobile" autocomplete="tel" required>
+                    <input type="tel" name="student_mobile" inputmode="numeric" autocomplete="tel" maxlength="10" pattern="[0-9]{10}" required>
                 </label>
                 <label class="admission-field">Mother's Name
                     <input type="text" name="mother_name" maxlength="150" required>
